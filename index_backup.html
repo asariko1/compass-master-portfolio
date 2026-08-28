@@ -93,31 +93,26 @@
 
     <!-- Hero -->
     <section class="pt-8 md:pt-14">
-      <!-- Mobile: the strip stays sticky and releases when this "relative" wrapper
-           ends, right where the play buttons are. Desktop (md+): the strip switches
-           to position:fixed instead, so it stays visible for the entire scroll —
-           the spacer below keeps the hero from jumping when it leaves the flow. -->
+      <!-- The strip pins under the header and releases when this wrapper ends,
+           i.e. exactly when the play buttons reach it. -->
       <div class="relative">
-      <div id="rhythm-bar" class="sticky top-[76px] md:fixed md:inset-x-0 md:top-[88px] md:mx-0 md:px-0 md:pt-0 md:pb-0 z-40 bg-white/95 backdrop-blur-sm -mx-6 sm:-mx-8 lg:-mx-12 px-6 sm:px-8 lg:px-12 pt-3 pb-4">
-        <div class="max-w-7xl mx-auto md:px-8 lg:px-12 md:pt-3 md:pb-4">
-          <div id="beat-strip" class="grid gap-[7px] h-[72px] items-end max-w-[820px]" style="grid-template-columns:repeat(12,1fr)">
-            <span style="height:72px;background:#ff4400"></span>
-            <span style="height:22px;background:#e2e8f0"></span>
-            <span style="height:48px;background:#94a3b8"></span>
-            <span style="height:22px;background:#e2e8f0"></span>
-            <span style="height:22px;background:#e2e8f0"></span>
-            <span style="height:22px;background:#e2e8f0"></span>
-            <span style="height:48px;background:#94a3b8"></span>
-            <span style="height:48px;background:#94a3b8"></span>
-            <span style="height:22px;background:#e2e8f0"></span>
-            <span style="height:48px;background:#94a3b8"></span>
-            <span style="height:22px;background:#e2e8f0"></span>
-            <span style="height:48px;background:#94a3b8"></span>
-          </div>
-          <div id="strip-caption" class="mt-4 text-[12.5px] tracking-[.15em] uppercase text-slate-400">Soleá · 12 · accents on 3 7 8 10 12</div>
-        </div>
+      <div class="sticky top-[76px] md:top-[88px] z-40 bg-white/95 backdrop-blur-sm -mx-6 sm:-mx-8 lg:-mx-12 px-6 sm:px-8 lg:px-12 pt-3 pb-4">
+      <div id="beat-strip" class="grid gap-[7px] h-[72px] items-end max-w-[820px]" style="grid-template-columns:repeat(12,1fr)">
+        <span style="height:72px;background:#ff4400"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:48px;background:#94a3b8"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:48px;background:#94a3b8"></span>
+        <span style="height:48px;background:#94a3b8"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:48px;background:#94a3b8"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:48px;background:#94a3b8"></span>
       </div>
-      <div id="rhythm-bar-spacer" class="h-0"></div>
+      <div id="strip-caption" class="mt-4 text-[12.5px] tracking-[.15em] uppercase text-slate-400">Soleá · 12 · accents on 3 7 8 10 12</div>
+      </div>
 
       <h1 class="mt-7 text-4xl md:text-6xl lg:text-[68px] font-bold tracking-[-.035em] leading-[1.05] text-slate-900 max-w-4xl text-balance">A metronome cannot teach you compás.</h1>
 
@@ -150,7 +145,7 @@
     <!-- The user's own description, verbatim -->
     <section class="pt-16 md:pt-20 max-w-3xl">
       <p class="text-[17.5px] leading-[1.8] text-slate-600 text-pretty">
-        Rhythm in flamenco is more than counting beats, it's about feeling the compás. Flamenco Compás Master is built for dancers, guitarists, and singers who want a practice tool that feels alive. Instead of relying on the robotic, synthetic clicks of a traditional metronome, it uses real palmas and cajón recordings to create a natural, musical groove. It is designed as a beautifully minimal, distraction free space that helps artists truly internalize the heartbeat of flamenco and focus purely on their craft.
+        Rhythm in flamenco is more than counting beats, it’s about feeling the compás. Flamenco Compás Master is built for dancers, guitarists, and singers who want a practice tool that feels alive. Instead of relying on the robotic, synthetic clicks of a traditional metronome, it uses real palmas and cajón recordings to create a natural, musical groove. It is designed as a beautifully minimal, distraction free space that helps artists truly internalize the heartbeat of flamenco and focus purely on their craft.
       </p>
     </section>
 
@@ -182,7 +177,7 @@
       <div class="flex-1 flex flex-col md:flex-row gap-10 md:gap-14 items-center">
         <div class="flex-1">
           <h2 class="text-3xl md:text-[38px] font-semibold tracking-[-.022em] leading-[1.18] text-slate-900">Real hands, recorded</h2>
-          <p class="mt-5 text-[17px] leading-[1.75] text-slate-600 text-pretty">Claras, sordas and cajón captured as individual one-shots and scheduled on the device's audio clock, not on a render loop. The groove breathes and still never drifts.</p>
+          <p class="mt-5 text-[17px] leading-[1.75] text-slate-600 text-pretty">Claras, sordas and cajón captured as individual one-shots and scheduled on the device’s audio clock, not on a render loop. The groove breathes and still never drifts.</p>
           <div class="mt-6 flex gap-2.5">
             <span class="bg-slate-100 rounded-md px-3 py-1.5 text-[13px] font-medium text-slate-600">claras</span>
             <span class="bg-slate-100 rounded-md px-3 py-1.5 text-[13px] font-medium text-slate-600">sordas</span>
@@ -304,23 +299,6 @@
   <script>
     lucide.createIcons();
     document.getElementById("year").textContent = new Date().getFullYear();
-  </script>
-
-  <!-- Rhythm bar: sticky on mobile (releases at the play buttons), fixed on
-       desktop (stays visible for the whole scroll). The spacer keeps the hero
-       from jumping when the bar leaves the flow at the md breakpoint. -->
-  <script>
-  (() => {
-    const bar = document.getElementById('rhythm-bar');
-    const spacer = document.getElementById('rhythm-bar-spacer');
-    if (!bar || !spacer) return;
-    const sync = () => {
-      spacer.style.height = window.innerWidth >= 768 ? bar.offsetHeight + 'px' : '0px';
-    };
-    sync();
-    window.addEventListener('resize', sync);
-    window.addEventListener('load', sync);
-  })();
   </script>
 
   <!-- Compás demo: real one-shots on the Web Audio clock, bars driven from the same timer -->
