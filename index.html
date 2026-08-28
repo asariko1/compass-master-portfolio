@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Flamenco Compás Master | asariko</title>
-  <meta name="description" content="Flamenco Compás Master is a calm, privacy-first cycle tracking app designed for clarity, comfort, and simplicity." />
+  <meta name="description" content="Flamenco Compás Master is a flamenco rhythm companion that replaces metronome clicks with real palmas and cajón, recorded by hand. Twelve palos, no accounts, works offline." />
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +13,8 @@
 
   <!-- Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css">
+  <link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css">
 
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -26,7 +28,9 @@
           colors: {
             slate: {
               850: '#1f2937',
-            }
+            },
+            ink: '#2c3e50',
+            compas: '#ff4400',
           }
         }
       }
@@ -34,7 +38,7 @@
   </script>
 
   <!-- Custom CSS -->
-    <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/style.css">
 
   <style>
     h1.text-slate-900,
@@ -45,82 +49,227 @@
     header a.text-slate-900 {
       color: #2c3e50 !important;
     }
+
+    /* Beat strip */
+    #beat-strip > span {
+      display: block;
+      border-radius: 3px;
+      transition: height .09s ease-out, background-color .09s ease-out;
+    }
   </style>
 </head>
 
 <body class="bg-white text-slate-900 selection:bg-slate-200 selection:text-slate-900 font-sans">
 
   <!-- Navbar -->
-    <header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300 py-6">
-        <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-between">
-            <a href="https://asariko.net" class="text-xl font-bold tracking-tight text-slate-900 z-50 relative">asariko</a>
+  <header id="navbar" class="fixed top-0 left-0 right-0 z-50 bg-transparent transition-all duration-300 py-6">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex items-center justify-between">
+      <a href="https://asariko.net" class="text-xl font-bold tracking-tight text-slate-900 z-50 relative">asariko</a>
 
-            <!-- Desktop Nav -->
-            <nav class="hidden md:flex items-center gap-8">
-                <a href="https://asariko.net" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Home</a>
-                <a href="https://asariko.net/projects" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Projects</a>
-                <a href="https://asariko.net/#about" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">About</a>
-                <a href="https://asariko.net/#contact" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Contact</a>
-            </nav>
+      <!-- Desktop Nav -->
+      <nav class="hidden md:flex items-center gap-8">
+        <a href="https://asariko.net" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Home</a>
+        <a href="https://asariko.net/projects" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Projects</a>
+        <a href="https://asariko.net/#about" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">About</a>
+        <a href="https://asariko.net/#contact" class="text-sm font-medium text-slate-500 hover:text-slate-900 transition-colors">Contact</a>
+      </nav>
 
-            <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="md:hidden text-slate-900 p-2 z-50 relative" aria-label="Toggle menu">
-                <i data-lucide="menu" class="w-6 h-6"></i>
-            </button>
-        </div>
+      <!-- Mobile Menu Button -->
+      <button id="mobile-menu-btn" class="md:hidden text-slate-900 p-2 z-50 relative" aria-label="Toggle menu">
+        <i data-lucide="menu" class="w-6 h-6"></i>
+      </button>
+    </div>
 
-        <!-- Mobile Nav Overlay -->
-        <div id="mobile-menu" class="fixed top-0 left-0 w-screen h-screen bg-white/70 backdrop-blur-sm z-40 flex flex-col items-center justify-center gap-8 hidden opacity-0 transition-opacity duration-300">
-            <a href="https://asariko.net" class="mobile-link text-2xl font-medium text-slate-900">Home</a>
-            <a href="https://asariko.net/projects" class="mobile-link text-2xl font-medium text-slate-900">Projects</a>
-            <a href="https://asariko.net/#about" class="mobile-link text-2xl font-medium text-slate-900">About</a>
-            <a href="https://asariko.net/#contact" class="mobile-link text-2xl font-medium text-slate-900">Contact</a>
-        </div>
-    </header>
+    <!-- Mobile Nav Overlay -->
+    <div id="mobile-menu" class="fixed top-0 left-0 w-screen h-screen bg-white/70 backdrop-blur-sm z-40 flex flex-col items-center justify-center gap-8 hidden opacity-0 transition-opacity duration-300">
+      <a href="https://asariko.net" class="mobile-link text-2xl font-medium text-slate-900">Home</a>
+      <a href="https://asariko.net/projects" class="mobile-link text-2xl font-medium text-slate-900">Projects</a>
+      <a href="https://asariko.net/#about" class="mobile-link text-2xl font-medium text-slate-900">About</a>
+      <a href="https://asariko.net/#contact" class="mobile-link text-2xl font-medium text-slate-900">Contact</a>
+    </div>
+  </header>
 
-  <main class="pt-28 flex-grow w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 flex flex-col gap-24 md:gap-32 pb-24">
+  <main class="pt-28 flex-grow w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-24">
 
-    <section class="scroll-mt-24">
-      <article class="flex flex-col gap-12">
+    <!-- Hero -->
+    <section class="pt-8 md:pt-14">
+      <div id="beat-strip" class="grid gap-[7px] h-[72px] items-end max-w-[820px]" style="grid-template-columns:repeat(12,1fr)">
+        <span style="height:72px;background:#ff4400"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:48px;background:#94a3b8"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:48px;background:#94a3b8"></span>
+        <span style="height:48px;background:#94a3b8"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:48px;background:#94a3b8"></span>
+        <span style="height:22px;background:#e2e8f0"></span>
+        <span style="height:48px;background:#94a3b8"></span>
+      </div>
+      <div id="strip-caption" class="mt-4 text-[12.5px] tracking-[.15em] uppercase text-slate-400">Soleá · 12 · accents on 3 7 8 10 12</div>
 
-        <div class="max-w-3xl">
-          <h1 class="text-4xl md:text-5xl font-bold text-slate-900 mb-4">Flamenco Compás Master</h1>
-          <p class="text-xl text-slate-400 font-light mb-6">
-            Flamenco Compás Master is a refined flamenco rhythm companion that replaces sterile metronome clicks with the living, breathing pulse of real palmas and cajón.
-          </p>
-          <p class="text-slate-600 leading-relaxed text-lg mb-8">
-            Rhythm in flamenco is more than counting beats, it’s about feeling the compás. Flamenco Compás Master is built for dancers, guitarists, and singers who want a practice tool that feels alive. Instead of relying on the robotic, synthetic clicks of a traditional metronome, it uses real palmas and cajón recordings to create a natural, musical groove. It is designed as a beautifully minimal, distraction free space that helps artists truly internalize the heartbeat of flamenco and focus purely on their craft.
-          </p>
+      <h1 class="mt-7 text-4xl md:text-6xl lg:text-[68px] font-bold tracking-[-.035em] leading-[1.05] text-slate-900 max-w-4xl text-balance">A metronome cannot teach you compás.</h1>
 
-          <div class="flex flex-wrap items-center gap-4">
-            <a
-              href="/terms"
-              class="inline-flex items-center gap-2 bg-[#2c3e50] text-white px-6 py-3.5 rounded-lg text-sm font-medium transition-transform hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-900/20">
-              Terms
-              <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-            </a>
+      <p class="mt-6 text-lg md:text-[22px] font-light leading-[1.5] text-slate-400 max-w-3xl text-pretty">
+        Flamenco Compás Master is a refined flamenco rhythm companion that replaces sterile metronome clicks with the living, breathing pulse of real palmas and cajón.
+      </p>
 
-            <a
-              href="/privacy"
-              class="inline-flex items-center gap-2 border border-slate-200 text-slate-700 px-6 py-3.5 rounded-lg text-sm font-medium hover:bg-slate-50 hover:border-slate-300 transition-all">
-              Privacy
-              <i data-lucide="shield" class="w-3.5 h-3.5"></i>
-            </a>
+      <div class="mt-8 flex flex-wrap items-center gap-2.5">
+        <!-- App Store button — restore when the listing is live
+        <a href="#" class="inline-flex items-center gap-2 bg-[#2c3e50] text-white px-7 py-4 rounded-lg text-sm font-medium transition-transform hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-900/20">
+          Download on the App Store <i class="ph ph-arrow-up-right text-[15px]"></i>
+        </a>
+        -->
+        <button type="button" data-play="solea" class="inline-flex items-center gap-3 text-[#2c3e50] hover:text-slate-900 text-[17px] font-medium px-3 py-4 transition-colors">
+          <i class="ph ph-speaker-high text-[26px]"></i><span>Hear a soleá</span>
+        </button>
+        <span class="w-px h-[22px] bg-slate-200"></span>
+        <button type="button" data-play="tangos" class="inline-flex items-center gap-3 text-[#2c3e50] hover:text-slate-900 text-[17px] font-medium px-3 py-4 transition-colors">
+          <i class="ph ph-speaker-high text-[26px]"></i><span>Hear a tangos</span>
+        </button>
+      </div>
+
+      <p class="mt-5 text-sm text-slate-400">
+        Every palmas and cajón sample recorded by hand by
+        <a href="#doruk" class="text-[#2c3e50] border-b border-slate-300 pb-px">Doruk Okuyucu</a>
+      </p>
+    </section>
+
+    <!-- The user's own description, verbatim -->
+    <section class="pt-16 md:pt-20 max-w-3xl">
+      <p class="text-[17.5px] leading-[1.8] text-slate-600 text-pretty">
+        Rhythm in flamenco is more than counting beats, it’s about feeling the compás. Flamenco Compás Master is built for dancers, guitarists, and singers who want a practice tool that feels alive. Instead of relying on the robotic, synthetic clicks of a traditional metronome, it uses real palmas and cajón recordings to create a natural, musical groove. It is designed as a beautifully minimal, distraction free space that helps artists truly internalize the heartbeat of flamenco and focus purely on their craft.
+      </p>
+    </section>
+
+    <!-- What it does -->
+    <section class="pt-16 grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12">
+      <div>
+        <div class="w-8 h-px bg-[#2c3e50] mb-[18px]"></div>
+        <h3 class="text-[17px] font-semibold text-[#2c3e50]">Real palmas, not clicks</h3>
+        <p class="mt-2.5 text-[15px] leading-[1.7] text-slate-500 text-pretty">Recorded claras, sordas and cajón one-shots, scheduled on the audio clock so the compás never drifts.</p>
+      </div>
+      <div>
+        <div class="w-8 h-px bg-[#2c3e50] mb-[18px]"></div>
+        <h3 class="text-[17px] font-semibold text-[#2c3e50]">Twelve palos</h3>
+        <p class="mt-2.5 text-[15px] leading-[1.7] text-slate-500 text-pretty">Soleá, bulería, tangos, siguiriyas, alegrías, fandangos, rumba, sevillanas, tientos and more, each with its own accents.</p>
+      </div>
+      <div>
+        <div class="w-8 h-px bg-[#2c3e50] mb-[18px]"></div>
+        <h3 class="text-[17px] font-semibold text-[#2c3e50]">Practice, not production</h3>
+        <p class="mt-2.5 text-[15px] leading-[1.7] text-slate-500 text-pretty">Balance palmas against cajón, set the tempo, and nothing else. No accounts, no ads, works offline.</p>
+      </div>
+    </section>
+
+    <!-- 01 -->
+    <section class="pt-24 md:pt-28 flex gap-8 md:gap-13">
+      <div class="hidden md:flex w-14 flex-none flex-col items-center">
+        <div class="text-[11.5px] font-medium tracking-[.16em] text-[#2c3e50]">01</div>
+        <div class="w-px flex-1 mt-3.5 bg-gradient-to-b from-[#2c3e50] to-slate-200"></div>
+      </div>
+      <div class="flex-1 flex flex-col md:flex-row gap-10 md:gap-14 items-center">
+        <div class="flex-1">
+          <h2 class="text-3xl md:text-[38px] font-semibold tracking-[-.022em] leading-[1.18] text-slate-900">Real hands, recorded</h2>
+          <p class="mt-5 text-[17px] leading-[1.75] text-slate-600 text-pretty">Claras, sordas and cajón captured as individual one-shots and scheduled on the device’s audio clock, not on a render loop. The groove breathes and still never drifts.</p>
+          <div class="mt-6 flex gap-2.5">
+            <span class="bg-slate-100 rounded-md px-3 py-1.5 text-[13px] font-medium text-slate-600">claras</span>
+            <span class="bg-slate-100 rounded-md px-3 py-1.5 text-[13px] font-medium text-slate-600">sordas</span>
+            <span class="bg-slate-100 rounded-md px-3 py-1.5 text-[13px] font-medium text-slate-600">cajón</span>
           </div>
         </div>
+        <div class="w-full md:w-[340px] flex-none rounded-2xl bg-slate-50 border border-slate-100 p-6 flex items-center justify-center overflow-hidden h-[400px]">
+          <img src="https://asariko.net/assets/compass_master/cm2.webp" alt="The main screen: compás wheel, mixer and transport" class="h-full w-full object-contain">
+        </div>
+      </div>
+    </section>
 
-        <!-- Image Grid -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-50 transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04] hover:shadow-md">
-            <img src="https://asariko.net/assets/compass_master/cm1.webp" class="w-full h-full object-contain bg-slate-50 transition-transform duration-500" alt="Flamenco Compás Master screen 1">
-          </div>
-
-          <div class="aspect-[3/4] rounded-lg overflow-hidden bg-slate-50 transition-transform duration-300 hover:-translate-y-1 hover:scale-[1.04] hover:shadow-md">
-            <img src="https://asariko.net/assets/compass_master/cm2.webp" class="w-full h-full object-contain bg-slate-50 transition-transform duration-500" alt="Flamenco Compás Master screen 2">
+    <!-- Doruk Okuyucu -->
+    <section class="pt-20 md:pt-24 flex gap-8 md:gap-13">
+      <div class="hidden md:block w-14 flex-none"></div>
+      <div id="doruk" class="flex-1 flex flex-col md:flex-row gap-8 md:gap-11 items-center bg-slate-50 rounded-2xl p-8 md:p-11 scroll-mt-32">
+        <img src="/assets/doruk.webp" alt="Doruk Okuyucu" class="w-full md:w-[300px] h-[240px] flex-none rounded-xl object-cover">
+        <div class="flex-1">
+          <div class="text-xs tracking-[.18em] uppercase text-slate-400">Rhythms and recordings</div>
+          <h3 class="mt-3 text-3xl font-semibold tracking-[-.02em] text-[#2c3e50]">Doruk Okuyucu</h3>
+          <p class="mt-3.5 text-base leading-[1.7] text-slate-600 max-w-xl text-pretty">Flamenco guitarist, composer and teacher. He advised on how every compás should sit, and recorded every palmas and cajón sample by hand in his studio.</p>
+          <div class="mt-5 flex flex-wrap gap-3">
+            <a href="https://www.dorukokuyucu.com/" target="_blank" rel="noopener" aria-label="dorukokuyucu.com" title="dorukokuyucu.com" class="w-[46px] h-[46px] rounded-xl bg-[#2c3e50] hover:bg-[#1b2836] text-white inline-flex items-center justify-center text-[22px] transition-all hover:-translate-y-0.5"><i class="ph-fill ph-globe-hemisphere-west"></i></a>
+            <a href="https://open.spotify.com/artist/1oTBfx9On7t7hSzJHwI0Gq" target="_blank" rel="noopener" aria-label="Spotify" title="Spotify" class="w-[46px] h-[46px] rounded-xl bg-[#2c3e50] hover:bg-[#1b2836] text-white inline-flex items-center justify-center text-[22px] transition-all hover:-translate-y-0.5"><i class="ph-fill ph-spotify-logo"></i></a>
+            <a href="https://music.apple.com/tr/artist/doruk-okuyucu/589529861" target="_blank" rel="noopener" aria-label="Apple Music" title="Apple Music" class="w-[46px] h-[46px] rounded-xl bg-[#2c3e50] hover:bg-[#1b2836] text-white inline-flex items-center justify-center text-[22px] transition-all hover:-translate-y-0.5"><i class="ph-fill ph-music-notes"></i></a>
+            <a href="https://www.youtube.com/@dorukokuyucu" target="_blank" rel="noopener" aria-label="YouTube" title="YouTube" class="w-[46px] h-[46px] rounded-xl bg-[#2c3e50] hover:bg-[#1b2836] text-white inline-flex items-center justify-center text-[22px] transition-all hover:-translate-y-0.5"><i class="ph-fill ph-youtube-logo"></i></a>
+            <!-- Instagram — restore when ready
+            <a href="https://www.instagram.com/dorukokuyucu/" target="_blank" rel="noopener" aria-label="Instagram" title="Instagram" class="w-[46px] h-[46px] rounded-xl bg-[#2c3e50] hover:bg-[#1b2836] text-white inline-flex items-center justify-center text-[22px] transition-all hover:-translate-y-0.5"><i class="ph-fill ph-instagram-logo"></i></a>
+            -->
           </div>
         </div>
+      </div>
+    </section>
 
-      </article>
+    <!-- 02 -->
+    <section class="pt-20 md:pt-24 flex gap-8 md:gap-13">
+      <div class="hidden md:flex w-14 flex-none flex-col items-center">
+        <div class="text-[11.5px] font-medium tracking-[.16em] text-[#2c3e50]">02</div>
+        <div class="w-px flex-1 mt-3.5 bg-gradient-to-b from-[#2c3e50] to-slate-200"></div>
+      </div>
+      <div class="flex-1">
+        <h2 class="text-3xl md:text-[38px] font-semibold tracking-[-.022em] leading-[1.18] text-slate-900">Every palo has its own shape</h2>
+        <p class="mt-5 text-[17px] leading-[1.75] text-slate-600 max-w-2xl text-pretty">Twelve forms, each with its own count, accents and feel. Switch between them without losing the tempo you were practising at.</p>
+
+        <div class="mt-7 grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl">
+          <div class="border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Soleá</div><div class="mt-1 text-[13px] text-slate-400">12 · 3 7 8 10 12</div></div>
+          <div class="border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Bulería (12)</div><div class="mt-1 text-[13px] text-slate-400">12 · 2 4 8 10</div></div>
+          <div class="border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Tangos</div><div class="mt-1 text-[13px] text-slate-400">4 · 2 4</div></div>
+          <div class="border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Siguiriyas</div><div class="mt-1 text-[13px] text-slate-400">12 · 1 3 5 8 11</div></div>
+
+          <div class="palo-more hidden border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Alegrías</div><div class="mt-1 text-[13px] text-slate-400">12 · 3 7 8 10 12</div></div>
+          <div class="palo-more hidden border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Bulería (6)</div><div class="mt-1 text-[13px] text-slate-400">6 · 2 4</div></div>
+          <div class="palo-more hidden border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Fandangos</div><div class="mt-1 text-[13px] text-slate-400">12 · 1 4 7 10</div></div>
+          <div class="palo-more hidden border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Farruca</div><div class="mt-1 text-[13px] text-slate-400">4 · 1 3</div></div>
+          <div class="palo-more hidden border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Rumba</div><div class="mt-1 text-[13px] text-slate-400">4 · 1 3</div></div>
+          <div class="palo-more hidden border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Sevillanas</div><div class="mt-1 text-[13px] text-slate-400">3 · 1</div></div>
+          <div class="palo-more hidden border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Tanguillos</div><div class="mt-1 text-[13px] text-slate-400">4 · 1 3</div></div>
+          <div class="palo-more hidden border border-slate-100 rounded-xl px-5 py-[18px] hover:border-slate-200 hover:bg-slate-50 transition-colors"><div class="text-base font-semibold text-[#2c3e50]">Tientos</div><div class="mt-1 text-[13px] text-slate-400">4 · 1 3</div></div>
+        </div>
+
+        <button type="button" id="palos-toggle" class="mt-5 inline-flex items-center gap-2 text-[13.5px] font-medium text-[#2c3e50] hover:text-slate-900 py-1.5 transition-colors">
+          <span>and eight more</span><i class="ph ph-arrow-down text-[15px]"></i>
+        </button>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section class="pt-20 md:pt-24 flex gap-8 md:gap-13">
+      <div class="hidden md:flex w-14 flex-none flex-col items-center">
+        <div class="text-[11.5px] font-medium tracking-[.16em] text-[#2c3e50]">03</div>
+        <div class="w-px flex-1 mt-3.5 bg-gradient-to-b from-[#2c3e50] to-transparent"></div>
+      </div>
+      <div class="flex-1 flex flex-col-reverse md:flex-row gap-10 md:gap-14 items-center">
+        <div class="w-full md:w-[340px] flex-none rounded-2xl bg-slate-50 border border-slate-100 p-6 flex items-center justify-center overflow-hidden h-[400px]">
+          <img src="https://asariko.net/assets/compass_master/cm1.webp" alt="Settings: dark mode, keep screen awake, language" class="h-full w-full object-contain">
+        </div>
+        <div class="flex-1">
+          <h2 class="text-3xl md:text-[38px] font-semibold tracking-[-.022em] leading-[1.18] text-slate-900">Nothing in the way</h2>
+          <p class="mt-5 text-[17px] leading-[1.75] text-slate-600 text-pretty">No account, no ads, no cloud, works on a plane. Dark mode, keep-screen-awake and three languages — the entire settings screen fits on one page because there is nothing else to configure.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Close -->
+    <section class="mt-24 bg-slate-50 rounded-2xl p-10 md:p-14 flex flex-col md:flex-row md:items-center md:justify-between gap-8">
+      <div>
+        <div class="text-2xl md:text-[34px] font-semibold tracking-[-.025em] leading-[1.2] text-[#2c3e50]">Practise with hands, not a click.</div>
+        <p class="mt-3.5 text-base leading-[1.7] text-slate-500 max-w-lg">Free with four palos. Pro unlocks all twelve.</p>
+      </div>
+      <div class="flex flex-wrap items-center gap-3 flex-none">
+        <!-- App Store button — restore when the listing is live
+        <a href="#" class="inline-flex items-center gap-2 bg-[#2c3e50] text-white px-7 py-4 rounded-lg text-sm font-medium transition-transform hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-900/20">
+          Download on the App Store <i class="ph ph-arrow-up-right text-[15px]"></i>
+        </a>
+        -->
+        <a href="https://flamencocompasmaster.asariko.net/terms/" class="inline-flex items-center gap-2 border border-slate-200 bg-white text-slate-600 hover:text-[#2c3e50] hover:border-slate-300 rounded-lg px-6 py-4 text-[13.5px] font-medium transition-colors">Terms <i class="ph ph-arrow-square-out text-sm"></i></a>
+        <a href="https://flamencocompasmaster.asariko.net/privacy/" class="inline-flex items-center gap-2 border border-slate-200 bg-white text-slate-600 hover:text-[#2c3e50] hover:border-slate-300 rounded-lg px-6 py-4 text-[13.5px] font-medium transition-colors">Privacy <i class="ph ph-shield text-sm"></i></a>
+      </div>
     </section>
 
   </main>
@@ -133,9 +282,9 @@
         <span>Built with simplicity</span>
 
         <div class="flex items-center gap-2">
-          <a href="/terms" class="hover:text-slate-900 transition-colors">Terms</a>
+          <a href="https://flamencocompasmaster.asariko.net/terms/" class="hover:text-slate-900 transition-colors">Terms</a>
           <span class="text-slate-300">·</span>
-          <a href="/privacy" class="hover:text-slate-900 transition-colors">Privacy</a>
+          <a href="https://flamencocompasmaster.asariko.net/privacy/" class="hover:text-slate-900 transition-colors">Privacy</a>
         </div>
       </div>
     </div>
@@ -144,13 +293,169 @@
   <script>
     lucide.createIcons();
     document.getElementById("year").textContent = new Date().getFullYear();
-
-    
   </script>
+
+  <!-- Compás demo: real one-shots on the Web Audio clock, bars driven from the same timer -->
+  <script>
+  (() => {
+    const FILES = {
+      accent:      '/audio/palmas_claras_accent.wav',
+      soft:        '/audio/palmas_claras_soft.wav',
+      soft2:       '/audio/palmas_claras_soft_2.wav',
+      sordaAccent: '/audio/palmas_sordas_accent.wav',
+      sordaSoft:   '/audio/palmas_sordas_soft.wav',
+      slap:        '/audio/cajon_slap.wav',
+      tap:         '/audio/cajon_tap.wav',
+      bass:        '/audio/cajon_bass.wav'
+    };
+
+    // [beat, offset (0.5 = the "y" between beats), sample, gain] — from the app's pattern JSON
+    const PATTERNS = {
+      solea: {
+        label: 'Hear a soleá', name: 'Soleá', beats: 12, bpm: 120, accents: [3, 7, 8, 10, 12],
+        events: [
+          [1, .5, 'soft2', .30],
+          [2, 0, 'soft', .55],
+          [3, 0, 'accent', .95], [3, 0, 'slap', .5],
+          [4, .5, 'soft2', .30],
+          [5, 0, 'soft2', .55],
+          [6, 0, 'soft', .55],
+          [7, 0, 'accent', .95], [7, 0, 'slap', .5], [7, .5, 'soft2', .32],
+          [8, 0, 'accent', .95], [8, 0, 'slap', .5],
+          [9, 0, 'soft', .55], [9, .5, 'soft2', .32],
+          [10, 0, 'accent', .95], [10, 0, 'slap', .5],
+          [11, 0, 'soft', .55],
+          [12, 0, 'accent', .95], [12, 0, 'slap', .5]
+        ]
+      },
+      tangos: {
+        label: 'Hear a tangos', name: 'Tangos', beats: 4, bpm: 100, accents: [2, 4],
+        events: [
+          [1, 0, 'sordaSoft', .55], [1, 0, 'tap', .35], [1, .5, 'tap', .3],
+          [2, 0, 'sordaAccent', .95], [2, 0, 'slap', .5], [2, .5, 'sordaSoft', .45], [2, .5, 'bass', .45],
+          [3, 0, 'soft', .5], [3, 0, 'bass', .45], [3, .5, 'tap', .3],
+          [4, 0, 'sordaAccent', .95], [4, 0, 'bass', .45]
+        ]
+      }
+    };
+
+    const strip = document.getElementById('beat-strip');
+    const caption = document.getElementById('strip-caption');
+    const buttons = [...document.querySelectorAll('[data-play]')];
+    if (!strip || !buttons.length) return;
+
+    let ctx, buffers, timer, startAt, nextCycle;
+    let current = 'solea';
+    let playing = false;
+
+    const pat = () => PATTERNS[current];
+
+    function baseBar(i, live) {
+      if (i === 0) return live ? [56, '#94a3b8'] : [72, '#ff4400'];
+      return pat().accents.includes(i + 1) ? [48, '#94a3b8'] : [22, '#e2e8f0'];
+    }
+
+    function paint(active) {
+      const n = pat().beats;
+      strip.style.gridTemplateColumns = `repeat(${n},1fr)`;
+      [...strip.children].forEach((el, i) => {
+        el.style.display = i < n ? 'block' : 'none';
+        if (i === active) {
+          el.style.height = '72px';
+          el.style.background = '#ff4400';
+        } else {
+          const [h, bg] = baseBar(i, active > -1);
+          el.style.height = h + 'px';
+          el.style.background = bg;
+        }
+      });
+      caption.textContent = `${pat().name} · ${pat().beats} · accents on ${pat().accents.join(' ')}`;
+    }
+
+    function label() {
+      buttons.forEach(b => {
+        const key = b.dataset.play;
+        const on = playing && current === key;
+        b.querySelector('span').textContent = on ? 'Stop' : PATTERNS[key].label;
+        b.querySelector('i').className = on ? 'ph ph-stop-circle text-[26px]' : 'ph ph-speaker-high text-[26px]';
+      });
+    }
+
+    async function load() {
+      if (buffers) return;
+      const keys = Object.keys(FILES);
+      const decoded = await Promise.all(keys.map(k =>
+        fetch(FILES[k]).then(r => r.arrayBuffer()).then(a => ctx.decodeAudioData(a))
+      ));
+      buffers = {};
+      keys.forEach((k, i) => { buffers[k] = decoded[i]; });
+    }
+
+    function hit(key, at, gain) {
+      const buf = buffers[key];
+      if (!buf) return;
+      const src = ctx.createBufferSource();
+      src.buffer = buf;
+      const g = ctx.createGain();
+      g.gain.value = gain;
+      src.connect(g).connect(ctx.destination);
+      src.start(at);
+    }
+
+    function tick() {
+      const p = pat(), beat = 60 / p.bpm, cycle = p.beats * beat;
+      const t = ctx.currentTime - startAt;
+      paint(t < 0 ? 0 : Math.floor((((t % cycle) + cycle) % cycle) / beat));
+      while (nextCycle < ctx.currentTime + 0.4) {
+        for (const [b, off, key, gain] of p.events) {
+          hit(key, nextCycle + (b - 1 + off) * beat, gain);
+        }
+        nextCycle += cycle;
+      }
+    }
+
+    async function start(key) {
+      current = key;
+      if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
+      if (ctx.state === 'suspended') await ctx.resume();
+      try { await load(); } catch (e) { return; }
+      startAt = ctx.currentTime + 0.12;
+      nextCycle = startAt;
+      playing = true;
+      label();
+      timer = setInterval(tick, 25);
+      tick();
+    }
+
+    function stop() {
+      clearInterval(timer);
+      playing = false;
+      if (ctx) ctx.suspend();
+      label();
+      paint(-1);
+    }
+
+    buttons.forEach(b => b.addEventListener('click', () => {
+      const key = b.dataset.play;
+      if (playing && current === key) return stop();
+      if (playing) { stop(); setTimeout(() => start(key), 60); return; }
+      start(key);
+    }));
+
+    // Palos "and eight more"
+    const toggle = document.getElementById('palos-toggle');
+    if (toggle) {
+      toggle.addEventListener('click', () => {
+        const more = [...document.querySelectorAll('.palo-more')];
+        const open = !more[0].classList.contains('hidden');
+        more.forEach(el => el.classList.toggle('hidden', open));
+        toggle.querySelector('span').textContent = open ? 'and eight more' : 'Show fewer';
+        toggle.querySelector('i').className = open ? 'ph ph-arrow-down text-[15px]' : 'ph ph-arrow-up text-[15px]';
+      });
+    }
+  })();
+  </script>
+
   <script src="/script.js"></script>
-<script>
-  lucide.createIcons();
-  document.getElementById("year").textContent = new Date().getFullYear();
-</script>
 </body>
 </html>
