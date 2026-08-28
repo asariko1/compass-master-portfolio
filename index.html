@@ -115,6 +115,16 @@
             <span style="height:48px;background:#94a3b8"></span>
           </div>
           <div id="strip-caption" class="mt-4 text-[12.5px] tracking-[.15em] uppercase text-slate-400">Soleá · 12 · accents on 3 7 8 10 12</div>
+
+          <div class="mt-4 hidden md:flex flex-nowrap items-center gap-1 sm:gap-2.5">
+            <button type="button" data-play="solea" class="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[#2c3e50] hover:text-slate-900 text-[14px] sm:text-[17px] font-medium px-2 sm:px-3 py-3.5 sm:py-4 transition-colors">
+              <i class="ph ph-speaker-high text-[20px] sm:text-[26px]"></i><span>Hear a soleá</span>
+            </button>
+            <span class="w-px h-[22px] bg-slate-200 flex-none"></span>
+            <button type="button" data-play="tangos" class="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[#2c3e50] hover:text-slate-900 text-[14px] sm:text-[17px] font-medium px-2 sm:px-3 py-3.5 sm:py-4 transition-colors">
+              <i class="ph ph-speaker-high text-[20px] sm:text-[26px]"></i><span>Hear a tangos</span>
+            </button>
+          </div>
         </div>
       </div>
       <div id="rhythm-bar-spacer" class="h-0"></div>
@@ -126,12 +136,7 @@
       </p>
       </div>
 
-      <div class="mt-4 flex flex-nowrap items-center gap-1 sm:gap-2.5">
-        <!-- App Store button — restore when the listing is live
-        <a href="#" class="inline-flex items-center gap-2 bg-[#2c3e50] text-white px-7 py-4 rounded-lg text-sm font-medium transition-transform hover:-translate-y-0.5 hover:shadow-lg hover:shadow-slate-900/20">
-          Download on the App Store <i class="ph ph-arrow-up-right text-[15px]"></i>
-        </a>
-        -->
+      <div class="mt-4 flex md:hidden flex-nowrap items-center gap-1 sm:gap-2.5">
         <button type="button" data-play="solea" class="inline-flex items-center gap-2 sm:gap-3 whitespace-nowrap text-[#2c3e50] hover:text-slate-900 text-[14px] sm:text-[17px] font-medium px-2 sm:px-3 py-3.5 sm:py-4 transition-colors">
           <i class="ph ph-speaker-high text-[20px] sm:text-[26px]"></i><span>Hear a soleá</span>
         </button>
@@ -369,7 +374,7 @@
 
     const strip = document.getElementById('beat-strip');
     const caption = document.getElementById('strip-caption');
-    const buttons = [...document.querySelectorAll('[data-play]')];
+    const buttons = [...document.querySelectorAll('[data-play]')]; // matches both desktop (in-bar) and mobile copies
     if (!strip || !buttons.length) return;
 
     let ctx, buffers, timer, startAt, nextCycle, master;
@@ -409,6 +414,8 @@
         b.querySelector('i').className = (on ? 'ph ph-stop-circle' : 'ph ph-speaker-high') + ' text-[20px] sm:text-[26px]';
       });
     }
+
+
 
     async function load() {
       if (buffers) return;
