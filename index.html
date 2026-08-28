@@ -344,7 +344,7 @@
     const buttons = [...document.querySelectorAll('[data-play]')];
     if (!strip || !buttons.length) return;
 
-    let ctx, buffers, timer, startAt, nextCycle;
+    let ctx, buffers, timer, startAt, nextCycle, master;
     let live = [];
     let current = 'solea';
     let playing = false;
@@ -399,7 +399,7 @@
       src.buffer = buf;
       const g = ctx.createGain();
       g.gain.value = gain;
-      src.connect(g).connect(ctx.destination);
+      src.connect(g).connect(master || ctx.destination);
       src.start(at);
       live.push(src);
       src.onended = () => {
@@ -426,6 +426,9 @@
       if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)();
       if (ctx.state === 'suspended') await ctx.resume();
       try { await load(); } catch (e) { return; }
+      killMaster();
+      master = ctx.createGain();
+      master.connect(ctx.destination);
       startAt = ctx.currentTime + 0.12;
       nextCycle = startAt;
       playing = true;
@@ -434,12 +437,25 @@
       tick();
     }
 
+    // Anything already scheduled ahead is cut off here: stop() alone is not
+    // reliable for a source that has not started, so the master gain the run
+    // was routed through is disconnected as well.
+    function killMaster() {
+      if (master) {
+        try { master.gain.value = 0; master.disconnect(); } catch (e) {}
+      }
+      master = null;
+      live.forEach(s => {
+        try { s.stop(); } catch (e) {}
+        try { s.disconnect(); } catch (e) {}
+      });
+      live = [];
+    }
+
     function stop() {
       clearInterval(timer);
       playing = false;
-      // kill anything already scheduled ahead, or it fires on the next resume
-      live.forEach(s => { try { s.stop(); } catch (e) {} });
-      live = [];
+      killMaster();
       label();
       paint(-1);
     }
