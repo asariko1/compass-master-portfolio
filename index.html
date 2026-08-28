@@ -345,6 +345,7 @@
     if (!strip || !buttons.length) return;
 
     let ctx, buffers, timer, startAt, nextCycle;
+    let live = [];
     let current = 'solea';
     let playing = false;
 
@@ -400,9 +401,15 @@
       g.gain.value = gain;
       src.connect(g).connect(ctx.destination);
       src.start(at);
+      live.push(src);
+      src.onended = () => {
+        const i = live.indexOf(src);
+        if (i > -1) live.splice(i, 1);
+      };
     }
 
     function tick() {
+      if (!playing || !ctx) return;
       const p = pat(), beat = 60 / p.bpm, cycle = p.beats * beat;
       const t = ctx.currentTime - startAt;
       paint(t < 0 ? 0 : Math.floor((((t % cycle) + cycle) % cycle) / beat));
@@ -430,7 +437,9 @@
     function stop() {
       clearInterval(timer);
       playing = false;
-      if (ctx) ctx.suspend();
+      // kill anything already scheduled ahead, or it fires on the next resume
+      live.forEach(s => { try { s.stop(); } catch (e) {} });
+      live = [];
       label();
       paint(-1);
     }
